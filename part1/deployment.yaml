@@ -1,0 +1,29 @@
+# Creates a deployment that defines our capture order API app, related settings and configuration
+# This deployment must be created before the service. The service references the app defined in this deployment
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: captureorder
+  namespace: default
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: captureorder
+    spec:      
+      containers:
+        - name: captureorder
+          image: shanepeckham/captureorderack:v9
+          ports:
+          - containerPort: 80
+          imagePullPolicy: Always
+          env:
+           -  name:  "MONGOHOST"
+              value: "mongodb://mongo-mongodb"
+           -  name: "RABBITMQHOST"
+              value: "amqp://admin:my-password@rabbit-rabbitmq:5672"
+           -  name:  "TEAMNAME"
+              value: "team-emre"
+           -  name:  "PARTITIONKEY"
+              value: "0" 
